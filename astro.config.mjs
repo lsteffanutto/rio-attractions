@@ -25,7 +25,8 @@ export default defineConfig({
    * - SEO components for canonical URLs
    * - Open Graph meta tags for social sharing
    */
-  site: 'https://rio-attractions.example.com',
+  site: 'https://lsteffanutto.github.io/rio-attractions/',
+  base: '/rio-attractions/',
 
   /**
    * Integrations extend Astro's functionality
