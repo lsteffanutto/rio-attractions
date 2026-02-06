@@ -1,0 +1,13 @@
+# Dépendances
+node_modules/
+
+# Build Astro
+dist/
+.astro/
+
+# Logs et caches
+*.log
+.eslintcache
+
+# OS
+.DS_Store

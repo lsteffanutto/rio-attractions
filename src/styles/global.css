@@ -1,0 +1,528 @@
+/**
+ * Global Styles
+ *
+ * This file contains global CSS styles that apply throughout the application.
+ * We use Tailwind CSS directives to inject Tailwind's utility classes,
+ * and add custom styles for elements that need special treatment.
+ *
+ * Structure:
+ * 1. Tailwind Directives - Base, components, utilities
+ * 2. CSS Custom Properties - Design tokens for theming
+ * 3. Base Element Styles - HTML element defaults
+ * 4. Component Styles - Reusable component patterns
+ * 5. Animation Styles - Custom animations
+ * 6. Leaflet Overrides - Map library customizations
+ */
+
+/* ==========================================================================
+   TAILWIND DIRECTIVES
+   ========================================================================== */
+
+/**
+ * @tailwind base
+ * Injects Tailwind's base styles (Preflight).
+ * This normalizes browser defaults for consistent cross-browser styling.
+ */
+@tailwind base;
+
+/**
+ * @tailwind components
+ * Injects Tailwind's component classes.
+ * Also processes any @apply directives in custom component classes.
+ */
+@tailwind components;
+
+/**
+ * @tailwind utilities
+ * Injects Tailwind's utility classes.
+ * These are the atomic classes like p-4, text-center, flex, etc.
+ */
+@tailwind utilities;
+
+/* ==========================================================================
+   CSS CUSTOM PROPERTIES (Design Tokens)
+   ========================================================================== */
+
+/**
+ * CSS Variables allow us to define reusable values that can be changed
+ * dynamically (e.g., for theming or responsive adjustments).
+ *
+ * Benefits:
+ * - Single source of truth for design values
+ * - Easy to update globally
+ * - Can be modified with JavaScript
+ * - Support for dark mode theming
+ */
+:root {
+  /* Primary Colors - Rio Theme */
+  --rio-green: #009739;
+  --rio-yellow: #fedd00;
+  --rio-blue: #012169;
+
+  /* Carnival Colors */
+  --carnival-pink: #ff1493;
+  --carnival-orange: #ff6b35;
+  --carnival-purple: #8b5cf6;
+  --carnival-gold: #ffd700;
+
+  /* Beach Colors */
+  --beach-sand: #f5deb3;
+  --beach-ocean: #0077b6;
+  --beach-sky: #87ceeb;
+
+  /* Category Colors */
+  --category-monument: #e11d48;
+  --category-beach: #0ea5e9;
+  --category-carnival: #f59e0b;
+  --category-historical: #8b5cf6;
+  --category-food: #10b981;
+  --category-favela: #6366f1;
+  --category-bloco: #ec4899;
+
+  /* Spacing */
+  --sidebar-width: 400px;
+  --header-height: 64px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 350ms ease;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Z-Index Scale */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+}
+
+/* ==========================================================================
+   BASE ELEMENT STYLES
+   ========================================================================== */
+
+/**
+ * @layer base
+ * Base layer contains default styles for HTML elements.
+ * These are applied with the lowest specificity, so they're easy to override.
+ */
+@layer base {
+  /**
+   * HTML Element
+   * Sets up smooth scrolling for anchor links.
+   * The scroll-behavior property makes navigation feel more polished.
+   */
+  html {
+    scroll-behavior: smooth;
+    /* Prevent layout shift from scrollbar appearance */
+    scrollbar-gutter: stable;
+  }
+
+  /**
+   * Body Element
+   * Sets the default font, colors, and ensures minimum viewport height.
+   * Using min-h-screen ensures the page fills at least the full viewport.
+   */
+  body {
+    @apply min-h-screen bg-gray-50 font-body text-gray-900 antialiased;
+    /* Antialiased text looks smoother on modern displays */
+  }
+
+  /**
+   * Headings
+   * Apply the display font to all heading elements.
+   * This creates visual hierarchy and brand consistency.
+   */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display font-bold tracking-tight;
+  }
+
+  /**
+   * Focus Styles
+   * Custom focus ring for accessibility.
+   * The focus ring helps keyboard users see which element is focused.
+   */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-rio-yellow ring-offset-2;
+  }
+
+  /**
+   * Links
+   * Default link styling with transition for hover effects.
+   */
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  /**
+   * Images
+   * Prevent images from breaking layout.
+   * max-width: 100% ensures images don't overflow their containers.
+   */
+  img {
+    @apply max-w-full;
+  }
+}
+
+/* ==========================================================================
+   COMPONENT STYLES
+   ========================================================================== */
+
+/**
+ * @layer components
+ * Component layer is for reusable component patterns.
+ * These have higher specificity than base styles.
+ */
+@layer components {
+  /**
+   * Card Component
+   * A reusable card pattern with shadow and rounded corners.
+   * Used for attraction cards, info panels, etc.
+   */
+  .card {
+    @apply rounded-xl bg-white shadow-card transition-shadow duration-200;
+  }
+
+  .card:hover {
+    @apply shadow-card-hover;
+  }
+
+  /**
+   * Button Base Styles
+   * Shared styles for all button variants.
+   */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-medium transition-all duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  /**
+   * Primary Button
+   * The main call-to-action button style.
+   */
+  .btn-primary {
+    @apply btn bg-rio-green text-white;
+    @apply hover:bg-opacity-90;
+    @apply focus:ring-rio-green;
+  }
+
+  /**
+   * Secondary Button
+   * A less prominent button for secondary actions.
+   */
+  .btn-secondary {
+    @apply btn border border-gray-300 bg-white text-gray-700;
+    @apply hover:bg-gray-50;
+    @apply focus:ring-gray-500;
+  }
+
+  /**
+   * Carnival Button
+   * A festive button style for Carnival-themed actions.
+   */
+  .btn-carnival {
+    @apply btn bg-gradient-to-r from-carnival-pink to-carnival-orange text-white;
+    @apply hover:from-carnival-orange hover:to-carnival-pink;
+    @apply focus:ring-carnival-pink;
+  }
+
+  /**
+   * Category Badge
+   * Small badges for displaying attraction categories.
+   */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  /**
+   * Input Field
+   * Styled input for search and forms.
+   */
+  .input {
+    @apply w-full rounded-lg border border-gray-300 px-4 py-2 transition-colors;
+    @apply placeholder:text-gray-400;
+    @apply focus:border-rio-green focus:outline-none focus:ring-2 focus:ring-rio-green/20;
+  }
+
+  /**
+   * Skeleton Loading
+   * Animated placeholder while content is loading.
+   * Creates a shimmer effect for better perceived performance.
+   */
+  .skeleton {
+    @apply animate-pulse rounded bg-gray-200;
+  }
+
+  /**
+   * Glass Effect
+   * Frosted glass effect for overlays and panels.
+   * Uses backdrop-blur for a modern, translucent look.
+   */
+  .glass {
+    @apply bg-white/80 backdrop-blur-sm;
+  }
+
+  /**
+   * Gradient Text
+   * Text with a gradient fill for eye-catching headlines.
+   */
+  .gradient-text {
+    @apply bg-gradient-to-r from-rio-green via-rio-yellow to-carnival-orange bg-clip-text text-transparent;
+  }
+}
+
+/* ==========================================================================
+   UTILITY STYLES
+   ========================================================================== */
+
+@layer utilities {
+  /**
+   * Hide Scrollbar
+   * Hides the scrollbar while maintaining scroll functionality.
+   * Useful for custom scroll containers.
+   */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /**
+   * Text Balance
+   * Improves text wrapping for headlines.
+   * Prevents awkward line breaks in headings.
+   */
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* ==========================================================================
+   LEAFLET MAP OVERRIDES
+   ========================================================================== */
+
+/**
+ * Leaflet Default Styles Override
+ *
+ * Leaflet has its own CSS that needs to be customized to match our design.
+ * These styles override the defaults for a more cohesive look.
+ */
+
+/* Map container must have a defined height */
+.leaflet-container {
+  @apply h-full w-full bg-gray-100;
+  font-family: inherit; /* Use our font instead of Leaflet's default */
+}
+
+/* Custom popup styling */
+.leaflet-popup-content-wrapper {
+  @apply rounded-xl border-0 p-0 shadow-lg;
+}
+
+.leaflet-popup-content {
+  @apply m-0 min-w-[280px];
+}
+
+.leaflet-popup-tip {
+  @apply bg-white;
+}
+
+/* Close button styling */
+.leaflet-popup-close-button {
+  @apply z-10 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500;
+  @apply hover:bg-gray-200 hover:text-gray-700;
+  top: 8px !important;
+  right: 8px !important;
+}
+
+/* Attribution styling */
+.leaflet-control-attribution {
+  @apply rounded-tl-lg bg-white/90 text-xs backdrop-blur-sm;
+}
+
+/* Zoom control styling */
+.leaflet-control-zoom {
+  @apply overflow-hidden rounded-lg border-0 shadow-md;
+}
+
+.leaflet-control-zoom a {
+  @apply flex h-9 w-9 items-center justify-center border-0 bg-white text-gray-700;
+  @apply hover:bg-gray-100;
+}
+
+.leaflet-control-zoom-in {
+  @apply rounded-t-lg border-b border-gray-200;
+}
+
+.leaflet-control-zoom-out {
+  @apply rounded-b-lg;
+}
+
+/* Custom marker styling */
+.custom-marker {
+  @apply flex h-8 w-8 items-center justify-center rounded-full shadow-md transition-transform;
+  @apply hover:scale-110;
+}
+
+/* Marker cluster styling */
+.marker-cluster-small,
+.marker-cluster-medium,
+.marker-cluster-large {
+  @apply flex items-center justify-center rounded-full font-bold text-white;
+}
+
+.marker-cluster-small {
+  @apply h-10 w-10 bg-rio-green;
+}
+
+.marker-cluster-medium {
+  @apply h-12 w-12 bg-rio-yellow text-gray-900;
+}
+
+.marker-cluster-large {
+  @apply h-14 w-14 bg-carnival-orange;
+}
+
+/* ==========================================================================
+   ANIMATION KEYFRAMES
+   ========================================================================== */
+
+/**
+ * Custom Animations
+ *
+ * These animations are used for UI transitions and loading states.
+ * All animations use transform and opacity for GPU acceleration.
+ */
+
+/* Shimmer effect for loading skeletons */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Fade in from bottom */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* Scale in from center */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out forwards;
+}
+
+/* Bounce effect for markers */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce-marker {
+  animation: bounce 0.5s ease-in-out;
+}
+
+/* ==========================================================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================================================== */
+
+/**
+ * Mobile-First Responsive Styles
+ *
+ * These styles adjust the layout for different screen sizes.
+ * We use a mobile-first approach, adding complexity for larger screens.
+ */
+
+/* Adjust sidebar width on tablets */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 350px;
+  }
+}
+
+/* Full-width sidebar on mobile */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 100%;
+  }
+}
+
+/* ==========================================================================
+   PRINT STYLES
+   ========================================================================== */
+
+/**
+ * Print Styles
+ *
+ * Optimizations for when users print the page.
+ * Hides unnecessary elements and ensures good contrast.
+ */
+@media print {
+  /* Hide interactive elements */
+  .no-print,
+  .leaflet-control-zoom,
+  .leaflet-control-attribution {
+    display: none !important;
+  }
+
+  /* Ensure good contrast */
+  body {
+    @apply bg-white text-black;
+  }
+
+  /* Show link URLs */
+  a[href]::after {
+    content: ' (' attr(href) ')';
+    @apply text-gray-500;
+  }
+}

@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Background circle with gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#009739"/>
+      <stop offset="100%" style="stop-color:#00B347"/>
+    </linearGradient>
+    <linearGradient id="sunGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FEDD00"/>
+      <stop offset="100%" style="stop-color:#FFB800"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Main circle -->
+  <circle cx="50" cy="50" r="48" fill="url(#bgGradient)"/>
+
+  <!-- Sugarloaf mountain silhouette -->
+  <path d="M15 70 Q25 50 35 55 Q45 60 50 45 Q55 30 60 35 Q65 40 70 30 Q80 35 85 70 Z" fill="#006B2B"/>
+
+  <!-- Sun -->
+  <circle cx="70" cy="25" r="12" fill="url(#sunGradient)"/>
+
+  <!-- Map pin -->
+  <g transform="translate(40, 50) scale(0.5)">
+    <path d="M20 0C8.95 0 0 8.95 0 20c0 15 20 30 20 30s20-15 20-30C40 8.95 31.05 0 20 0z" fill="white"/>
+    <circle cx="20" cy="18" r="8" fill="#009739"/>
+  </g>
+
+  <!-- Water waves -->
+  <path d="M10 80 Q20 75 30 80 Q40 85 50 80 Q60 75 70 80 Q80 85 90 80" stroke="white" stroke-width="2" fill="none" opacity="0.5"/>
+</svg>

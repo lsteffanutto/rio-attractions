@@ -1,0 +1,254 @@
+---
+/**
+ * Main Layout Component
+ *
+ * This is the base layout that wraps all pages in our application.
+ * It provides consistent structure, SEO meta tags, and styling.
+ *
+ * Astro Layouts:
+ * - Layouts use the .astro file extension
+ * - They can accept props from pages
+ * - The <slot /> element is where page content is injected
+ * - This is similar to React's children prop or Vue's slots
+ *
+ * SEO Implementation:
+ * - We include comprehensive meta tags for search engines
+ * - Open Graph tags for social media sharing
+ * - Structured data (JSON-LD) for rich search results
+ * - Canonical URLs to prevent duplicate content issues
+ */
+
+// Import global styles
+// This CSS file contains Tailwind directives and custom styles
+import '../styles/global.css';
+
+// Define TypeScript interface for component props
+// This provides type safety and better developer experience
+interface Props {
+  /** Page title - appears in browser tab and search results */
+  title?: string;
+  /** Page description - used in meta tags and search results */
+  description?: string;
+  /** Open Graph image for social sharing */
+  image?: string;
+  /** Canonical URL for this page */
+  canonicalUrl?: string;
+}
+
+// Destructure props with default values
+// The Astro.props object contains all props passed to this component
+const {
+  title = 'Discover Rio de Janeiro | Best Attractions & Travel Guide',
+  description = 'Explore the best of Rio de Janeiro - from iconic landmarks like Cristo Redentor to beautiful beaches, vibrant Carnival spots, and authentic local food. Plan your perfect Rio adventure.',
+  image = '/og-image.jpg',
+  canonicalUrl = Astro.url.href,
+} = Astro.props;
+
+// Site configuration
+// These values are used throughout the layout for consistent branding
+const siteName = 'Rio Attractions';
+const siteUrl = 'https://rio-attractions.example.com';
+
+/**
+ * Structured Data (JSON-LD)
+ *
+ * This helps search engines understand our content better.
+ * We're using the TouristDestination and WebSite schemas.
+ * This can lead to rich snippets in search results.
+ *
+ * Learn more: https://schema.org/TouristDestination
+ */
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${siteUrl}/#website`,
+      url: siteUrl,
+      name: siteName,
+      description: description,
+      inLanguage: 'en-US',
+    },
+    {
+      '@type': 'TouristDestination',
+      name: 'Rio de Janeiro',
+      description: 'The Marvelous City - home to iconic landmarks, beautiful beaches, and vibrant culture.',
+      touristType: ['Beach Tourism', 'Cultural Tourism', 'Adventure Tourism'],
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: -22.9068,
+        longitude: -43.1729,
+      },
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <!--
+    HTML Structure Explanation:
+    - lang="en" helps screen readers and search engines
+    - scroll-smooth enables smooth scrolling for anchor links
+  -->
+
+  <head>
+    <!--
+      Character Encoding & Viewport
+      - UTF-8 supports all characters including Portuguese accents
+      - Viewport meta ensures proper scaling on mobile devices
+    -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!--
+      Primary Meta Tags
+      - These are the most important for SEO
+      - Title should be under 60 characters for best display
+      - Description should be 150-160 characters
+    -->
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+
+    <!--
+      Canonical URL
+      - Tells search engines this is the "official" version of the page
+      - Prevents duplicate content issues
+    -->
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!--
+      Open Graph Tags (Facebook, LinkedIn, etc.)
+      - Control how the page appears when shared on social media
+      - og:image should be at least 1200x630 pixels
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content="en_US" />
+
+    <!--
+      Twitter Card Tags
+      - Similar to Open Graph but for Twitter
+      - "summary_large_image" shows a large preview image
+    -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    <!--
+      Favicon & App Icons
+      - Various sizes for different devices and contexts
+      - SVG favicon is modern and scalable
+    -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!--
+      Theme Color
+      - Sets the browser toolbar color on mobile
+      - Uses our Rio green color for brand consistency
+    -->
+    <meta name="theme-color" content="#009739" />
+
+    <!--
+      Structured Data (JSON-LD)
+      - Search engine optimization for rich results
+      - Placed in a script tag with type="application/ld+json"
+    -->
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+    <!--
+      Font Preloading
+      - Preload critical fonts to prevent FOIT (Flash of Invisible Text)
+      - Only preload the most important font weights
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--
+      Leaflet CSS
+      - Required for the map component
+      - Loaded before our styles so we can override if needed
+    -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+
+    <!--
+      Additional SEO Meta Tags
+      - robots: Controls search engine crawling
+      - author: Credits the creator
+      - keywords: Less important now but still useful
+    -->
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Rio Attractions" />
+    <meta
+      name="keywords"
+      content="Rio de Janeiro, Brazil, travel, tourism, Cristo Redentor, Copacabana, Ipanema, Carnival, beaches, attractions"
+    />
+
+    <!--
+      Generator Tag
+      - Indicates the site was built with Astro
+      - Helpful for analytics and debugging
+    -->
+    <meta name="generator" content={Astro.generator} />
+  </head>
+
+  <body class="bg-gray-50">
+    <!--
+      Skip Link
+      - Accessibility feature for keyboard users
+      - Allows skipping navigation to go directly to content
+      - Hidden by default, visible when focused
+    -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-rio-green focus:px-4 focus:py-2 focus:text-white"
+    >
+      Skip to main content
+    </a>
+
+    <!--
+      Main Content Area
+      - The <slot /> element renders page content
+      - id="main-content" is the target for the skip link
+    -->
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <!--
+      Noscript Fallback
+      - Shown to users with JavaScript disabled
+      - Important for accessibility and graceful degradation
+    -->
+    <noscript>
+      <div class="fixed inset-0 z-50 flex items-center justify-center bg-white p-4">
+        <div class="text-center">
+          <h1 class="mb-4 text-2xl font-bold text-gray-900">JavaScript Required</h1>
+          <p class="text-gray-600">
+            This interactive map application requires JavaScript to function. Please enable
+            JavaScript in your browser settings to explore Rio de Janeiro's attractions.
+          </p>
+        </div>
+      </div>
+    </noscript>
+  </body>
+</html>

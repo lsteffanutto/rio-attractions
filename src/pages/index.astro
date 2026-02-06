@@ -1,0 +1,59 @@
+---
+/**
+ * Home Page - Rio Attractions Interactive Map
+ *
+ * This is the main entry point for the application.
+ * It's an Astro page that renders our React App component.
+ *
+ * Astro Page Structure:
+ * - The frontmatter (between ---) runs on the server at build time
+ * - The template below is the HTML that gets rendered
+ * - React components with client directives are hydrated on the client
+ *
+ * Hydration Strategies:
+ * - client:load - Hydrate immediately when page loads
+ * - client:idle - Hydrate when browser is idle
+ * - client:visible - Hydrate when component is visible
+ * - client:media - Hydrate at specific media query
+ * - client:only - Never SSR, only client-side
+ *
+ * For our interactive map app, we use client:load because:
+ * 1. The map needs to be interactive immediately
+ * 2. Users expect to interact with it right away
+ * 3. There's no meaningful static version to show
+ */
+
+import Layout from '../layouts/Layout.astro';
+import App from '../components/App';
+
+/**
+ * Page Metadata
+ *
+ * These values are passed to the Layout component
+ * and used for SEO meta tags.
+ */
+const title = 'Rio de Janeiro Attractions | Interactive Travel Guide & Map';
+const description =
+  'Explore Rio de Janeiro with our interactive map. Discover Cristo Redentor, Copacabana, Ipanema, Carnival spots, local food, and hidden gems. Plan your perfect Rio adventure!';
+---
+
+<!--
+  Layout Component
+
+  Wraps the page with consistent HTML structure, meta tags, and styles.
+  Props are passed for SEO customization.
+-->
+<Layout title={title} description={description}>
+  <!--
+    React App Component
+
+    client:load hydration strategy ensures the app is interactive
+    as soon as possible after page load.
+
+    Why client:load instead of client:idle?
+    - Users expect to interact with the map immediately
+    - The map is the main content, not secondary
+    - Better perceived performance for first interaction
+  -->
+  <App client:load />
+</Layout>
